@@ -13,22 +13,24 @@ public class Main {
         String output = getUrlContent("https://api.openweathermap.org/data/2.5/" +
                 "onecall?lat=56.3287&lon=44.002&exclude=current,hourly,minutely,alerts&" +
                 "appid=34a4801037bcd9496bca871a0688a1d6&units=metric&units=metric");
+
         if (!output.isEmpty()){
             try {
                 JSONObject object = new JSONObject(output);
                 double difference;
-                double current = Math.abs((double) object.getJSONArray("daily").getJSONObject(0).getJSONObject("temp").get("night"));
+                int myDay = 6;
+                double current = Math.abs((double) object.getJSONArray("daily").getJSONObject(7).getJSONObject("temp").get("night"));
                 for (int day = 0; day < 7; day++){
                     double minimal  = (double) object.getJSONArray("daily").getJSONObject(day).getJSONObject("temp").get("night");
                     double feelsLike = (double) object.getJSONArray("daily").getJSONObject(day).getJSONObject("feels_like").get("night");
                     difference = Math.abs(minimal - feelsLike);
                     if (current > difference){
                         current = difference;
+                        myDay = day;
                     }
                     System.out.println("difference in " + day + " = " + difference);
                 }
-                System.out.println("lowest is " + current);
-                object.getJSONArray("daily").getJSONObject(1).get("temp");
+                System.out.println("lowest is " + current + " in day " + myDay);
 
             } catch (JSONException e) {
                 e.printStackTrace();
